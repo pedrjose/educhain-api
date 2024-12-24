@@ -1,16 +1,14 @@
 import mongoose from "mongoose";
 
-
-
 const connectDatabase = () => {
-  console.log(`Wait: Connecting to the Database..`);
+  mongoose.set("strictQuery", false);
 
   mongoose
     .connect(
       `mongodb+srv://${username}:${password}@cluster0.cg0wy.mongodb.net/`
     )
-    .then(() => console.log("\nDatabase Connected!"))
-    .catch((error) => console.log(`\nCONNECTION ERROR: ${error}`));
+    .then(() => console.log("Database Connected!"))
+    .catch((error) => console.log(error));
 };
 
 export default connectDatabase;
