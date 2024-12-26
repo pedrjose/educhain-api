@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 
+const username = "educhain";
+const password = "LmT57k4qRC8zvK06";
+
 const connectDatabase = () => {
   mongoose.set("strictQuery", false);
 
