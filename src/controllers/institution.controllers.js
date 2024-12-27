@@ -17,3 +17,4 @@ export async function registerInstitutionController(req, res) {
     res.status(500).send(err.message);
   }
 }
+
