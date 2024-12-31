@@ -2,6 +2,7 @@ import {
   registerInstitutionService,
   authInstitutionService,
   emitCertificateService,
+  validateCertificateService
 } from "../services/institution.services.js";
 
 export async function registerInstitutionController(req, res) {
@@ -59,6 +60,18 @@ export async function emitCertificateController(req, res) {
     );
 
     res.status(201).json(result);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+}
+
+export async function validateCertificateController(req, res) {
+  const { transactionHash } = req.body;
+
+  try {
+    const validate = await validateCertificateService(transactionHash);
+
+    res.status(201).json(validate);
   } catch (error) {
     res.status(500).send(error.message);
   }

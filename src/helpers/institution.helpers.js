@@ -1,5 +1,4 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 
 export function comparePasswords(password, hashedPassword) {
   return new Promise((resolve, reject) => {

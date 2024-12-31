@@ -1,8 +1,11 @@
 import bcrypt from "bcrypt";
 
 import Institutional from "../database/models/institutional.model.js";
-
 import { comparePasswords } from "../helpers/institution.helpers.js";
+import {
+  registerCertificate,
+  getTransactionParams,
+} from "../contracts/certificate.contract.js";
 
 import {
   registerInstitutionRepository,
@@ -108,10 +111,21 @@ export async function emitCertificateService(
   const certificate = { course, student };
 
   // Integração com contrato inteligente
-  // ...
+  const hashSign = await registerCertificate(certificate);
+
+  console.log(hashSign);
 
   return {
     message: "Certificado emitido com sucesso!",
-    certificateHash: "...",
+    certificateHash: hashSign,
   };
+}
+
+export async function validateCertificateService(transactionHash) {
+  if (!transactionHash)
+    throw new Error("Não é possível validar seu certificado. Informe a hash!");
+
+  await getTransactionParams(transactionHash);
+
+  return { message: "Certificado é válido!" };
 }
