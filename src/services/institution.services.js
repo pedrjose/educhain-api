@@ -127,5 +127,5 @@ export async function validateCertificateService(transactionHash) {
 
   const validate = await getTransactionParams(transactionHash);
 
-  return { message: "Certificado é válido!", validate };
+  return { message: "Certificado é válido!", validate, promise: true };
 }

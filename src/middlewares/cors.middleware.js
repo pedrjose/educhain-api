@@ -1,6 +1,6 @@
 export const corsAuth = (req, res, next) => {
   try {
-    const allowedOrigins = ["*"];
+    const allowedOrigins = ["http://localhost:5173", "*"];
     const origin = req.headers.origin;
 
     if (allowedOrigins.includes(origin)) {
