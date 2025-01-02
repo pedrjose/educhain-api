@@ -125,7 +125,7 @@ export async function validateCertificateService(transactionHash) {
   if (!transactionHash)
     throw new Error("Não é possível validar seu certificado. Informe a hash!");
 
-  await getTransactionParams(transactionHash);
+  const validate = await getTransactionParams(transactionHash);
 
-  return { message: "Certificado é válido!" };
+  return { message: "Certificado é válido!", validate };
 }

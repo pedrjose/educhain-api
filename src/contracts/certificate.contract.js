@@ -193,13 +193,12 @@ export async function getTransactionParams(transactionHash) {
         certificateIssuedEvent.topics.slice(1)
       );
 
-      // Retornar os parâmetros extraídos
-      console.log("Parâmetros da transação:");
-      console.log("Student CPF:", decodedLog.studentCPF);
-      console.log("Course Name:", decodedLog.courseName);
-      console.log("Institution CNPJ:", decodedLog.institutionCNPJ);
-
-      return decodedLog;
+      return {
+        student: decodedLog.studentCPF,
+        course: decodedLog.courseName,
+        institution: decodedLog.institutionCNPJ,
+        certificateHash: decodedLog.certificateHash,
+      };
     } else {
       console.log("Evento 'CertificateIssued' não encontrado nos logs.");
     }
