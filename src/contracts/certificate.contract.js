@@ -161,26 +161,22 @@ export async function registerCertificate(certificate) {
 
 export async function getTransactionParams(transactionHash) {
   try {
-    // Obter o recibo da transação utilizando a hash da transação
     const receipt = await web3.eth.getTransactionReceipt(transactionHash);
 
-    // Verificar se o recibo foi encontrado
     if (!receipt) {
       console.log("Transação não encontrada.");
       return;
     }
 
-    // Buscar os logs de evento para pegar os parâmetros da função chamada
     const logs = receipt.logs;
 
-    // Procurar o evento CertificateIssued, que é onde os parâmetros foram emitidos
     const certificateIssuedEvent = logs.find(
       (log) =>
         log.topics[0] ===
         web3.utils.sha3("CertificateIssued(string,string,string,bytes32)")
     );
 
-    // Verificar se o evento foi encontrado
+    let eventParams = {};
     if (certificateIssuedEvent) {
       const decodedLog = web3.eth.abi.decodeLog(
         [
@@ -193,15 +189,33 @@ export async function getTransactionParams(transactionHash) {
         certificateIssuedEvent.topics.slice(1)
       );
 
-      return {
-        student: decodedLog.studentCPF,
-        course: decodedLog.courseName,
-        institution: decodedLog.institutionCNPJ,
+      eventParams = {
+        studentCPF: decodedLog.studentCPF,
+        courseName: decodedLog.courseName,
+        institutionCNPJ: decodedLog.institutionCNPJ,
         certificateHash: decodedLog.certificateHash,
       };
     } else {
       console.log("Evento 'CertificateIssued' não encontrado nos logs.");
     }
+
+    if (eventParams.certificateHash) {
+      const detailedParams = await contract.methods
+        .validateCertificate(eventParams.certificateHash)
+        .call();
+
+      return {
+        ...eventParams,
+        studentName: detailedParams.studentName,
+        courseDuration: detailedParams.courseDuration.toString(),
+        teachingModality: detailedParams.teachingModality,
+        startDate: detailedParams.startDate,
+        graduationDate: detailedParams.graduationDate,
+        institutionCNPJ: detailedParams.institutionCNPJ,
+      };
+    }
+
+    return eventParams;
   } catch (error) {
     console.error("Erro ao obter parâmetros da transação:", error);
   }
